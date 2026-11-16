@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./style.css";
 
@@ -165,7 +165,26 @@ function App() {
   const [settings] = useState(initialSettings);
   const [entered, setEntered] = useState(false);
   const [page, setPage] = useState("Home");
+const [opening, setOpening] = useState(false);
+const musicRef = useRef(null);
 
+function openInvitation() {
+  if (opening) return;
+
+  setOpening(true);
+
+  const music = musicRef.current;
+  if (music) {
+    music.volume = 0.45;
+    music.play().catch(() => {
+      // Visitor can enable audio manually later.
+    });
+  }
+
+  setTimeout(() => {
+    setEntered(true);
+  }, 1100);
+}
   function navigate(destination) {
     setPage(destination);
     window.scrollTo({
@@ -214,52 +233,44 @@ function App() {
   ];
 
   
-  if (!entered) {
-    return (
-      <main className="invitation-scene">
-        <div className="night-sky" aria-hidden="true">
-          <div className="starfield starfield-one" />
-          <div className="starfield starfield-two" />
-          <div className="moon-glow" />
-        </div>
+ 
+if (!entered) {
+  return (
+    <main className={`christmas-opening ${opening ? "is-opening" : ""}`}>
+      <audio
+        ref={musicRef}
+        src={`${import.meta.env.BASE_URL}music/christmas.mp3`}
+        loop
+        preload="none"
+      />
 
-        <div className="invitation-heading">
-          <p className="eyebrow">MARUICHI PHILIPPINES STEEL TUBE INC.</p>
-          <h1>You're Invited</h1>
-          <p>To a magical evening under the stars</p>
-        </div>
+      <div className="invitation-artwork">
+        <img
+          src={`${import.meta.env.BASE_URL}images/christmas-invitation.png`}
+          alt="MPST Christmas celebration invitation under a starry sky with Santa's sleigh"
+          className="invitation-image"
+        />
 
-        <div className="invitation-envelope">
-          <div className="envelope-flap" />
-          <div className="envelope-body">
-            <div className="envelope-monogram">MPST</div>
-            <div className="envelope-ornament">✦ ✧ ✦</div>
-            <p>CHRISTMAS CELEBRATION</p>
-            <strong>2026</strong>
-          </div>
+        <button
+          type="button"
+          className="invitation-seal-button"
+          onClick={openInvitation}
+          aria-label="Enter the Christmas celebration"
+          disabled={opening}
+        >
+          <span className="sr-only">
+            Enter the Celebration
+          </span>
+        </button>
+      </div>
 
-          <button
-            className="star-seal"
-            type="button"
-            onClick={() => setEntered(true)}
-            aria-label="Enter the Christmas celebration"
-          >
-            ★
-          </button>
-        </div>
+      <p className="opening-hint">
+        ✦ Tap the golden star to enter the celebration ✦
+      </p>
+    </main>
+  );
+}
 
-        <div className="invitation-instruction">
-          <span>✧</span>
-          <p>Tap the golden star to open your invitation</p>
-          <span>✧</span>
-        </div>
-
-        <p className="invitation-footer">
-          DECEMBER 07, 2026 · JET HOTEL, LIPA CITY
-        </p>
-      </main>
-    );
-  }
 
 
   return (
