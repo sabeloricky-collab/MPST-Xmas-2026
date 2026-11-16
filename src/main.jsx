@@ -213,40 +213,54 @@ function App() {
     }
   ];
 
+  
   if (!entered) {
     return (
-      <main className="intro">
-        <div className="stars">
-          ✦ ✧ ✦ ✧ ✦
+      <main className="invitation-scene">
+        <div className="night-sky" aria-hidden="true">
+          <div className="starfield starfield-one" />
+          <div className="starfield starfield-two" />
+          <div className="moon-glow" />
         </div>
 
-        <p className="eyebrow">
-          YOU ARE CORDIALLY INVITED
+        <div className="invitation-heading">
+          <p className="eyebrow">MARUICHI PHILIPPINES STEEL TUBE INC.</p>
+          <h1>You're Invited</h1>
+          <p>To a magical evening under the stars</p>
+        </div>
+
+        <div className="invitation-envelope">
+          <div className="envelope-flap" />
+          <div className="envelope-body">
+            <div className="envelope-monogram">MPST</div>
+            <div className="envelope-ornament">✦ ✧ ✦</div>
+            <p>CHRISTMAS CELEBRATION</p>
+            <strong>2026</strong>
+          </div>
+
+          <button
+            className="star-seal"
+            type="button"
+            onClick={() => setEntered(true)}
+            aria-label="Enter the Christmas celebration"
+          >
+            ★
+          </button>
+        </div>
+
+        <div className="invitation-instruction">
+          <span>✧</span>
+          <p>Tap the golden star to open your invitation</p>
+          <span>✧</span>
+        </div>
+
+        <p className="invitation-footer">
+          DECEMBER 07, 2026 · JET HOTEL, LIPA CITY
         </p>
-
-        <h1 className="shining">
-          {settings.company}
-        </h1>
-
-        <h2>{settings.title}</h2>
-
-        <p className="theme-title">
-          {settings.theme}
-        </p>
-
-        <p>December 07, 2026 | 5:00 PM</p>
-
-        <Countdown target={settings.eventDate} />
-
-        <button
-          className="primary-button"
-          onClick={() => setEntered(true)}
-        >
-          ✦ Enter the Celebration
-        </button>
       </main>
     );
   }
+
 
   return (
     <div className="website">
