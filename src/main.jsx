@@ -1,109 +1,96 @@
-            <h2>{settings.title}</h2>
-            <p>{settings.invitation}</p>
-            <p>December 07, 2026 | 5:00 PM to 10:00 PM</p>
-            <button
-              className="primary-button"
-              onClick={() => navigate("RSVP")}
-            >
-              Confirm Your Attendance
-            </button>
-          </section>
 
-          <section className="content-section">
-            <h2>Countdown to Our Celebration</h2>
-            <Countdown target={settings.eventDate} />
-            <h2>Follow the Stars</h2>
-            <div className="star-grid">
-              {sections.filter(s => s !== "Home").map(s => (
-                <button
-                  className="star-card"
-                  key={s}
-                  onClick={() => navigate(s)}
-                >
-                  <span>✦</span>
-                  <strong>{s}</strong>
-                  <small>Explore</small>
-                </button>
-              ))}
-            </div>
-          </section>
-        </>
-      )}
 
-      {page === "Dress Code" && (
-        <section className="content-section">
-          <p className="eyebrow">AN EVENING OF ELEGANCE</p>
-          <h1>Dress to Shine</h1>
-          <p>Official Colors: Navy Blue and Silver</p>
-          <div className="dress-grid">
-            <article className="feature-card">
-              <div className="feature-icon">♟</div>
-              <h2>Gentlemen</h2>
-              <p>Formal Wear</p>
-              <p>Navy Blue and Silver</p>
-            </article>
-            <article className="feature-card">
-              <div className="feature-icon">♛</div>
-              <h2>Ladies</h2>
-              <p>Long Gown</p>
-              <p>Navy Blue and Silver</p>
-            </article>
-          </div>
-          <div className="color-swatches">
-            <span style={{background:"#0B1B3A"}} />
-            <span style={{background:"#AAB6C8"}} />
-            <span style={{background:"#E4E9F0"}} />
-          </div>
-        </section>
-      )}
+import React, { useEffect, useState } from "react";
+import { createRoot } from "react-dom/client";
+import "./style.css";
+import { db, auth } from "./firebase";
+const RSVP_WEB_APP_URL =
+  "https://script.google.com/macros/s/AKfycbwuJ3pOhXdjL3imwLl2sL9bvQEtz_nBvzMw4QFryKbEV06WiOe7843Yi535NqnO9b77/exec";
 
-      {page === "Venue" && (
-        <section className="content-section">
-          <p className="eyebrow">THE CELEBRATION VENUE</p>
-          <h1>{settings.venue}</h1>
-          <p>December 07, 2026 | 5:00 PM to 10:00 PM</p>
-          <div className="feature-card">
-            <h2>Join Us in Lipa City</h2>
-            <p>Celebrate with the entire MPST family.</p>
-            <a
-              className="primary-button"
-              href="https://www.google.com/maps/search/?api=1&query=Jet+Hotel+Lipa+City"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Open Google Maps
-            </a>
-          </div>
-        </section>
-      )}
+const initialSettings = {
+  company: "Maruichi Philippines Steel Tube Inc.",
+  title: "Christmas Party 2026",
+  theme: "Under the Stars",
+  eventDate: "2026-12-07T17:00:00+08:00",
+  eventEnd: "2026-12-07T22:00:00+08:00",
+  deadline: "2026-11-30",
+  venue: "Jet Hotel, Lipa City",
+  invitation: "An evening of gratitude, celebration, and shining moments together.",
+  thankYou: "Thank you for your RSVP! Please bring a gift worth ₱500 to share the spirit of Christmas.",
+  majorPrize: "Mio Gravis, Matte Brown",
+  minorPrize: "Home Appliances",
+  consolationPrize: "Appliances and Cash Prizes"
+};
 
-      {page === "Raffle" && (
-        <section className="content-section">
-          <p className="eyebrow">EXCITING CHRISTMAS SURPRISES</p>
-          <h1>Christmas Raffle</h1>
-          <Slideshow items={raffle} />
-        </section>
-      )}
+const sections = [
+  "Home", "Dress Code", "Venue",
+  "Raffle", "Program", "RSVP"
+];
 
-      {page === "Program" && (
-        <section className="content-section">
-          <p className="eyebrow">CELEBRATING OUR PEOPLE</p>
-          <h1>Program and Awards</h1>
-          <Slideshow items={awards} />
-        </section>
-      )}
+function Countdown({ target }) {
+  const [now, setNow] = useState(Date.now());
 
-      {page === "RSVP" && <RSVP settings={settings} />}
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-      <footer>
-        ✦ {settings.company} | Christmas Party 2026 ✦
-      </footer>
+  const remaining = Math.max(0, new Date(target).getTime() - now);
+
+  const values = [
+    Math.floor(remaining / 86400000),
+    Math.floor(remaining / 3600000) % 24,
+    Math.floor(remaining / 60000) % 60,
+    Math.floor(remaining / 1000) % 60
+  ];
+
+  return (
+    <div className="countdown">
+      {values.map((value, index) => (
+        <div className="time-box" key={index}>
+          <strong>{String(value).padStart(2, "0")}</strong>
+          <small>{["DAYS", "HOURS", "MIN", "SEC"][index]}</small>
+        </div>
+      ))}
     </div>
   );
 }
 
-createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+function Slideshow({ items }) {
+  const [index, setIndex] = useState(0);
+  const item = items[index];
+
+  return (
+    <div className="slide-card">
+      <div className="slide-icon">{item.icon}</div>
+      <h2>{item.title}</h2>
+      <p>{item.description}</p>
+      <div className="slide-controls">
+        <button onClick={() =>
+          setIndex((index - 1 + items.length) % items.length)
+        }>← Previous</button>
+        <span>{index + 1} / {items.length}</span>
+        <button onClick={() =>
+          setIndex((index + 1) % items.length)
+        }>Next →</button>
+      </div>
+    </div>
+  );
+}
+
+function RSVP({ settings }) {
+  const deadlinePassed = Date.now() >
+    new Date(settings.deadline + "T23:59:59+08:00").getTime();
+
+  return (
+    <section className="content-section">
+      <p className="eyebrow">YOUR PRESENCE MATTERS</p>
+      <h1>RSVP Registration</h1>
+      <p>Deadline: November 30, 2026</p>
+
+      {deadlinePassed ? (
+        <div className="form-card">
+          <h2>Registration Closed</h2>
+          <p>The RSVP deadline has passed.</p>
+        </div>
+      ) : (
