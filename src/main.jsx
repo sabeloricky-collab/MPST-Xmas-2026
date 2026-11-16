@@ -1,7 +1,9 @@
 
+
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./style.css";
+import { db, auth } from "./firebase";
 
 const initialSettings = {
   company: "Maruichi Philippines Steel Tube Inc.",
