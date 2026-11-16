@@ -165,26 +165,25 @@ function App() {
   const [settings] = useState(initialSettings);
   const [entered, setEntered] = useState(false);
   const [page, setPage] = useState("Home");
-const [opening, setOpening] = useState(false);
-const musicRef = useRef(null);
+  const [opening, setOpening] = useState(false);
+  const musicRef = useRef(null);
 
-function openInvitation() {
-  if (opening) return;
+  function openInvitation() {
+    if (opening) return;
+    setOpening(true);
 
-  setOpening(true);
+    // Play synchronously inside the tap handler for mobile browsers.
+    const music = musicRef.current;
+    if (music) {
+      music.volume = 0.45;
+      music.play().catch(() => {
+        // Some devices may still prevent playback.
+      });
+    }
 
-  const music = musicRef.current;
-  if (music) {
-    music.volume = 0.45;
-    music.play().catch(() => {
-      // Visitor can enable audio manually later.
-    });
+    window.setTimeout(() => setEntered(true), 1100);
   }
 
-  setTimeout(() => {
-    setEntered(true);
-  }, 1100);
-}
   function navigate(destination) {
     setPage(destination);
     window.scrollTo({
@@ -234,47 +233,38 @@ function openInvitation() {
 
   
  
-if (!entered) {
   return (
-    <main className={`christmas-opening ${opening ? "is-opening" : ""}`}>
+    <>
+      {/* Mounted once, so playback continues when the invitation opens. */}
       <audio
         ref={musicRef}
         src={`${import.meta.env.BASE_URL}music/christmas.mp3`}
         loop
-        preload="none"
+        preload="auto"
       />
 
-      <div className="invitation-artwork">
-        <img
-          src={`${import.meta.env.BASE_URL}images/christmas-invitation.png`}
-          alt="MPST Christmas celebration invitation under a starry sky with Santa's sleigh"
-          className="invitation-image"
-        />
-
-        <button
-          type="button"
-          className="invitation-seal-button"
-          onClick={openInvitation}
-          aria-label="Enter the Christmas celebration"
-          disabled={opening}
-        >
-          <span className="sr-only">
-            Enter the Celebration
-          </span>
-        </button>
-      </div>
-
-      <p className="opening-hint">
-        ✦ Tap the golden star to enter the celebration ✦
-      </p>
-    </main>
-  );
-}
-
-
-
-  return (
-    <div className="website">
+      {!entered ? (
+        <main className={`christmas-opening ${opening ? "is-opening" : ""}`}>
+          <div className="invitation-artwork">
+            <img
+              src={`${import.meta.env.BASE_URL}images/christmas-invitation.png`}
+              alt="Christmas invitation with Santa's sleigh constellation and golden star seal"
+              className="invitation-image"
+            />
+            <button
+              type="button"
+              className="invitation-seal-button"
+              onClick={openInvitation}
+              disabled={opening}
+              aria-label="Open Christmas invitation and play music"
+            >
+              <span className="sr-only">Enter the Celebration</span>
+            </button>
+          </div>
+          <p className="opening-hint">✦ Tap the golden star to enter the celebration ✦</p>
+        </main>
+      ) : (
+        <div className="website">
       <header className="site-header">
         <button
           className="logo"
@@ -468,7 +458,9 @@ if (!entered) {
         ✦ {settings.company} |
         Christmas Party 2026 ✦
       </footer>
-    </div>
+        </div>
+      )}
+    </>
   );
 }
 
