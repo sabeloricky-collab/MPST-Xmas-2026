@@ -567,3 +567,95 @@ footer {
     height: 72px;
   }
 }
+
+/* CINEMATIC CHRISTMAS OPENING */
+
+.christmas-opening {
+  min-height: 100svh;
+  background: #030d20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 12px;
+}
+
+.invitation-artwork {
+  position: relative;
+  width: min(100%, 1648px);
+  aspect-ratio: 1648 / 928;
+  overflow: hidden;
+  box-shadow: 0 0 60px #e3c77c24;
+  transition:
+    transform 1.1s ease,
+    opacity 1.1s ease,
+    filter 1.1s ease;
+}
+
+.invitation-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.invitation-seal-button {
+  position: absolute;
+  left: 49.5%;
+  top: 67.5%;
+  width: 15%;
+  height: 26%;
+  transform: translate(-50%, -50%);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.invitation-seal-button:hover {
+  filter: drop-shadow(0 0 18px #ffe6a5);
+}
+
+.invitation-seal-button:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 4px;
+}
+
+.is-opening .invitation-artwork {
+  transform: scale(1.2);
+  opacity: 0;
+  filter: blur(12px);
+}
+
+.opening-hint {
+  color: #f0dca7;
+  font-size: .85rem;
+  text-align: center;
+  letter-spacing: 1px;
+  animation: hintGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes hintGlow {
+  from { opacity: .5; }
+  to { opacity: 1; }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .invitation-artwork {
+    transition: none;
+  }
+}
