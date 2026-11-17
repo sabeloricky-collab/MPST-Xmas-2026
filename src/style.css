@@ -381,3 +381,26 @@ footer {
   .invitation-artwork { width: 100%; aspect-ratio: 1072 / 1616; }
   .invitation-seal-button { left: 50%; top: 60.5%; width: 36%; height: 18%; }
 }
+
+/* Celestial homepage and lightweight one-time title reveal */
+html, body, #root { min-height: 100%; }
+body { overflow-y: auto; }
+.website { min-height: 100svh; background: #071329; }
+.celestial-home, .celestial-intro { background: linear-gradient(#04102755,#04102788), var(--celestial-art) center center / cover no-repeat; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 16px; }
+.celestial-home { min-height: calc(100svh - 120px); gap: 6px; }
+.celestial-intro { min-height: 100svh; }
+.brand-emblem { width: clamp(45px, 7vh, 80px); height: auto; }
+.company-title, .reveal-title h1 { font-size: clamp(1.65rem, 4vw, 3.5rem); line-height: 1.05; text-transform: uppercase; color: #e7edf7; text-shadow: 0 2px 6px #000; margin: 5px 0; max-width: 900px; }
+.home-countdown .eyebrow { margin: 5px 0; letter-spacing: 1px; }
+.home-countdown .countdown { flex-wrap: nowrap; gap: 7px; margin: 7px 0; }
+.home-countdown .time-box { min-width: 58px; background: #0b1c3cbb; padding: 8px; }
+.christmas-word { font: italic 600 clamp(3rem, 8vw, 6rem)/.95 'Cormorant Garamond',serif; color: #ffe0a0; text-shadow: 0 2px 8px #000,0 0 15px #b17a33; }
+.stars-word { font: 600 clamp(1.7rem, 5vw, 3.5rem)/1.05 'Cormorant Garamond',serif; color: #e4edff; margin: 0; text-shadow: 0 2px 8px #000; }
+.event-details,.rsvp-deadline { margin: 6px 0; text-shadow: 0 1px 5px #000; }
+.rsvp-deadline { font-size: .8rem; color: #ffe0a0; }
+.home-rsvp { margin: 4px 0 10px; position: relative; touch-action: manipulation; }
+.stage-illuminate { background: #fff4d5; }
+.stage-illuminate .reveal-title { visibility: hidden; }
+.stage-reveal .reveal-title { opacity: 0; filter: blur(8px); transition: opacity .5s, filter .5s; }
+@media(max-width:650px) { .celestial-home,.celestial-intro { background-position: 50% center; } .celestial-home { padding: 18px 12px; min-height: calc(100svh - 115px); } .event-details { font-size: .85rem; } .home-countdown .time-box { min-width: 52px; } .home-rsvp { padding: 12px 20px; } }
+@media(prefers-reduced-motion:reduce) { .stage-reveal .reveal-title { transition: none; } }
