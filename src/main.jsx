@@ -247,27 +247,46 @@ function openInvitation() {
         loop
         preload="auto"
       />
-
-
 {!entered ? (
-  <main className={`christmas-opening ${opening ? "is-opening" : ""}`}>
-
+  <main
+    className={`christmas-opening ${opening ? "is-opening" : ""}`}
+  >
     <div className="invitation-artwork">
-      {/* Your existing invitation image and star seal button go here */}
+      <picture>
+        <source
+          media="(max-width: 650px)"
+          srcSet={`${import.meta.env.BASE_URL}images/christmas-invitation-mobile.png`}
+        />
+        <img
+          src={`${import.meta.env.BASE_URL}images/christmas-invitation.png`}
+          alt="MPST Christmas Party 2026 invitation"
+          className="invitation-image"
+        />
+      </picture>
+
+      <button
+        type="button"
+        className="invitation-seal-button"
+        onClick={openInvitation}
+        disabled={opening}
+        aria-label="Open Christmas invitation"
+      >
+        <span className="sr-only">
+          Enter the Celebration
+        </span>
+      </button>
     </div>
 
-    <div className="christmas-flash" aria-hidden="true" />
+    <div
+      className="christmas-flash"
+      aria-hidden="true"
+    />
 
     <p className="opening-hint">
       ✦ Tap the golden star to enter the celebration ✦
     </p>
-
   </main>
 ) : (
-  // Your existing homepage JSX goes here
-)}
-
-            
 <picture>
   <source
     media="(max-width: 650px)"
