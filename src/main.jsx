@@ -166,6 +166,25 @@ function App() {
   const [entered, setEntered] = useState(false);
   const [page, setPage] = useState("Home");
   const musicRef = useRef(null);
+  const videoRef = useRef(null);
+  const [mobile, setMobile] = useState(() => window.matchMedia("(max-width: 650px)").matches);
+  const [videoBlocked, setVideoBlocked] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 650px)");
+    const change = () => setMobile(query.matches);
+    query.addEventListener("change", change);
+    return () => query.removeEventListener("change", change);
+  }, []);
+
+  useEffect(() => {
+    if (entered) return;
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = true;
+    setVideoBlocked(false);
+    video.play().catch(() => setVideoBlocked(true));
+  }, [mobile, entered]);
 
   function openInvitation() {
     const music = musicRef.current;
@@ -237,17 +256,20 @@ function App() {
       {!entered ? (
         <main className="christmas-opening">
           <div className="invitation-artwork">
-            <picture>
-              <source
-                media="(max-width: 650px)"
-                srcSet={`${import.meta.env.BASE_URL}images/christmas-invitation-mobile.gif`}
-              />
-              <img
-                src={`${import.meta.env.BASE_URL}images/christmas-invitation.gif`}
-                alt="MPST Christmas Party 2026 invitation"
-                className="invitation-image"
-              />
-            </picture>
+            <video
+              key={mobile ? "mobile" : "desktop"}
+              ref={videoRef}
+              className="invitation-image"
+              src={`${import.meta.env.BASE_URL}images/${mobile ? "christmas-invitation-mobile.mp4" : "christmas-invitation.mp4"}`}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              aria-label="MPST Christmas Party 2026 invitation"
+              onPlaying={() => setVideoBlocked(false)}
+              onError={() => setVideoBlocked(true)}
+            />
             <button
               type="button"
               className="invitation-seal-button"
@@ -257,7 +279,12 @@ function App() {
               <span className="sr-only">Enter the Celebration</span>
             </button>
           </div>
-          <p className="opening-hint">✦ Tap the golden star to enter the celebration ✦</p>
+          {videoBlocked && (
+            <div className="opening-fallback">
+              <button className="primary-button" onClick={() => videoRef.current?.play().catch(() => {})}>Play invitation</button>
+              <button className="primary-button" onClick={openInvitation}>Enter the Celebration</button>
+            </div>
+          )}
         </main>
       ) : (
         <div className="website">
