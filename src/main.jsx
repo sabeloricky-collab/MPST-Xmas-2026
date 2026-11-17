@@ -181,33 +181,32 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (entered || stage !== "invitation") return;
+    if (entered) return;
     const video = videoRef.current;
     if (!video) return;
     video.muted = true;
     setVideoBlocked(false);
     video.play().catch(() => setVideoBlocked(true));
-  }, [mobile, entered, stage]);
+  }, [mobile, entered]);
 
   function openInvitation() {
-    if (stage !== "invitation") return;
     const music = musicRef.current;
     if (music) {
       music.volume = 0.45;
       music.play().catch(() => {});
     }
-    setStage("illuminate");
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    timers.current.push(setTimeout(() => setStage("title"), reduced ? 0 : 450));
-    timers.current.push(setTimeout(() => setStage("reveal"), reduced ? 1200 : 2800));
-    timers.current.push(setTimeout(() => { setEntered(true); setStage("home"); window.scrollTo(0, 0); }, reduced ? 1200 : 3400));
+    if (stage !== "invitation") return;
+    setStage("flash");
+    timers.current.push(setTimeout(() => { setEntered(true); setStage("welcome"); }, 550));
+    timers.current.push(setTimeout(() => setStage("home"), 3400));
   }
 
   function navigate(destination) {
+    setStage("home");
     setPage(destination);
     window.scrollTo({
       top: 0,
-      behavior: "smooth"
+      behavior: "auto"
     });
   }
 
@@ -261,17 +260,8 @@ function App() {
         loop
         preload="none"
       />
-      {!entered && stage !== "invitation" ? (
-        <main className={`celestial-intro stage-${stage}`} style={{"--celestial-art": `url(${import.meta.env.BASE_URL}images/celestial-background.webp)`}}>
-          <div className="reveal-title">
-            <img className="brand-emblem" src={`${import.meta.env.BASE_URL}images/mpst-logo.png`} alt="MPST" />
-            <h1>{settings.company}</h1>
-            <div className="christmas-word">Christmas</div>
-            <div className="stars-word">Under the Stars</div>
-          </div>
-        </main>
-      ) : !entered ? (
-        <main className="christmas-opening">
+      {!entered ? (
+        <main className={`christmas-opening ${stage === "flash" ? "flash-active" : ""}`}>
           <div className="invitation-artwork">
             <video
               key={mobile ? "mobile" : "desktop"}
@@ -291,6 +281,7 @@ function App() {
               type="button"
               className="invitation-seal-button"
               onClick={openInvitation}
+              disabled={stage !== "invitation"}
               aria-label="Enter the Christmas celebration"
             >
               <span className="sr-only">Enter the Celebration</span>
@@ -305,40 +296,21 @@ function App() {
         </main>
       ) : (
         <div className="website">
-      <header className="site-header">
-        <button
-          className="logo"
-          onClick={() => navigate("Home")}
-        >
-          ✦ MPST 2026
-        </button>
-
-        <nav aria-label="Main navigation">
-          {sections.map(section => (
-            <button
-              key={section}
-              className={
-                page === section ? "active" : ""
-              }
-              onClick={() => navigate(section)}
-            >
-              {section}
-            </button>
-          ))}
-        </nav>
-      </header>
-
-      {page === "Home" && (
-        <section className="celestial-home" style={{"--celestial-art": `url(${import.meta.env.BASE_URL}images/celestial-background.webp)`}}>
-          <img className="brand-emblem" src={`${import.meta.env.BASE_URL}images/mpst-logo.png`} alt="MPST" />
-          <h1 className="company-title">{settings.company}</h1>
-          <div className="home-countdown"><p className="eyebrow">Countdown to our celebration</p><Countdown target={settings.eventDate} /></div>
-          <div className="christmas-word">Christmas</div>
-          <h2 className="stars-word">Under the Stars</h2>
-          <p className="event-details">December 07, 2026 · 5:00 PM to 10:00 PM<br />{settings.venue}</p>
-          <p className="rsvp-deadline">RSVP deadline: November 30, 2026</p>
-          <button type="button" className="primary-button home-rsvp" onClick={() => navigate("RSVP")}>✦ Confirm Your Attendance ✦</button>
-        </section>
+      {page === "Home" ? (
+        <main className={`celestial-home ${stage === "welcome" ? "welcoming" : ""}`}>
+          <div className="celestial-art" data-layout={mobile ? "mobile" : "desktop"}>
+            <img className="celestial-image" src={`${import.meta.env.BASE_URL}images/celestial-${mobile ? "mobile" : "desktop"}.webp`} alt="Maruichi Philippines Steel Tube Inc. Christmas Under the Stars, December 7, 2026, Jet Hotel, Lipa City" />
+            <div className="welcome-title" aria-hidden={stage !== "welcome"}>Welcome to</div>
+            <div className="art-countdown"><Countdown target={settings.eventDate} /></div>
+            {[["Home", "Santa's Sleigh"], ["Dress Code", "Christmas Tree"], ["Venue", "Reindeer"], ["Raffle", "Christmas Gift"], ["Program", "Christmas Bell"], ["RSVP", "Christmas Angel"]].map(([destination, label], i) => (
+              <button key={destination} className={`constellation constellation-${i}`} title={`${label}: ${destination}`} aria-label={`${label}: ${destination}`} onClick={() => navigate(destination)}><span>{destination}</span></button>
+            ))}
+            <button className="art-rsvp" onClick={() => navigate("RSVP")} aria-label="Please confirm your attendance" />
+          </div>
+          <nav className="celestial-nav" aria-label="Page navigation">{sections.map(section => <button key={section} onClick={() => navigate(section)}>{section}</button>)}</nav>
+        </main>
+      ) : (
+        <header className="site-header"><button className="logo" onClick={() => navigate("Home")}>✦ MPST 2026</button><nav aria-label="Main navigation">{sections.map(section => <button key={section} className={page === section ? "active" : ""} onClick={() => navigate(section)}>{section}</button>)}</nav></header>
       )}
 
       {page === "Dress Code" && (
@@ -449,10 +421,10 @@ function App() {
         <RSVP settings={settings} />
       )}
 
-      <footer>
+      {page !== "Home" && <footer>
         ✦ {settings.company} |
         Christmas Party 2026 ✦
-      </footer>
+      </footer>}
         </div>
       )}
     </>
