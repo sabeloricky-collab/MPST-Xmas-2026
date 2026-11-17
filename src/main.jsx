@@ -197,8 +197,7 @@ function App() {
     }
     if (stage !== "invitation") return;
     setStage("flash");
-    timers.current.push(setTimeout(() => { setEntered(true); setStage("welcome"); }, 550));
-    timers.current.push(setTimeout(() => setStage("home"), 3400));
+    timers.current.push(setTimeout(() => { setEntered(true); setStage("home"); }, 550));
   }
 
   function navigate(destination) {
@@ -297,13 +296,12 @@ function App() {
       ) : (
         <div className="website">
       {page === "Home" ? (
-        <main className={`celestial-home ${stage === "welcome" ? "welcoming" : ""}`}>
-          <div className="celestial-art" data-layout={mobile ? "mobile" : "desktop"}>
+        <main className="celestial-home">
+          <div className="celestial-art" data-layout={mobile ? "mobile" : "desktop"} style={{ "--sky-art": `url("${import.meta.env.BASE_URL}images/celestial-${mobile ? "mobile" : "desktop"}.webp")` }}>
             <img className="celestial-image" src={`${import.meta.env.BASE_URL}images/celestial-${mobile ? "mobile" : "desktop"}.webp`} alt="Maruichi Philippines Steel Tube Inc. Christmas Under the Stars, December 7, 2026, Jet Hotel, Lipa City" />
-            <div className="welcome-title" aria-hidden={stage !== "welcome"}>Welcome to</div>
             <div className="art-countdown"><Countdown target={settings.eventDate} /></div>
             {[["Home", "Santa's Sleigh"], ["Dress Code", "Christmas Tree"], ["Venue", "Reindeer"], ["Raffle", "Christmas Gift"], ["Program", "Christmas Bell"], ["RSVP", "Christmas Angel"]].map(([destination, label], i) => (
-              <button key={destination} className={`constellation constellation-${i}`} title={`${label}: ${destination}`} aria-label={`${label}: ${destination}`} onClick={() => navigate(destination)}><span>{destination}</span></button>
+              <button key={destination} className={`constellation constellation-${i}`} title={`${label}: ${destination}`} aria-label={`${label}: ${destination}`} onClick={() => navigate(destination)}><span className="constellation-motion" aria-hidden="true" /><span className="constellation-label">{destination}</span></button>
             ))}
             <button className="art-rsvp" onClick={() => navigate("RSVP")} aria-label="Please confirm your attendance" />
           </div>
