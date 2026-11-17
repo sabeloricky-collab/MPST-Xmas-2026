@@ -3,8 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./style.css";
 
-const RSVP_WEB_APP_URL =
-  "https://script.google.com/macros/s/AKfycbwuJ3pOhXdjL3imwLl2sL9bvQEtz_nBvzMw4QFryKbEV06WiOe7843Yi535NqnO9b77/exec";
+const ADMIN_WEB_APP_URL =
+  "https://script.google.com/macros/s/AKfycbyg1AoCJzhIwy4F8OMXLKnDU83sc8yuRndv_r6VVf7gKPUEAwfC0MWAKrYzbjfbVDst/exec";
 
 // Set only to the restricted Admin Apps Script deployment URL, never the employee RSVP URL.
 const ADMIN_WEB_APP_URL = "";
