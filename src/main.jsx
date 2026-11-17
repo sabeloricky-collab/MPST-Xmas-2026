@@ -164,6 +164,9 @@ function RSVP({ settings }) {
 function App() {
   const [settings] = useState(initialSettings);
   const [entered, setEntered] = useState(false);
+  const [stage, setStage] = useState("invitation");
+  const timers = useRef([]);
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
   const [page, setPage] = useState("Home");
   const musicRef = useRef(null);
   const videoRef = useRef(null);
@@ -178,21 +181,26 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (entered) return;
+    if (entered || stage !== "invitation") return;
     const video = videoRef.current;
     if (!video) return;
     video.muted = true;
     setVideoBlocked(false);
     video.play().catch(() => setVideoBlocked(true));
-  }, [mobile, entered]);
+  }, [mobile, entered, stage]);
 
   function openInvitation() {
+    if (stage !== "invitation") return;
     const music = musicRef.current;
     if (music) {
       music.volume = 0.45;
       music.play().catch(() => {});
     }
-    setEntered(true);
+    setStage("illuminate");
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    timers.current.push(setTimeout(() => setStage("title"), reduced ? 0 : 450));
+    timers.current.push(setTimeout(() => setStage("reveal"), reduced ? 1200 : 2800));
+    timers.current.push(setTimeout(() => { setEntered(true); setStage("home"); window.scrollTo(0, 0); }, reduced ? 1200 : 3400));
   }
 
   function navigate(destination) {
@@ -253,7 +261,16 @@ function App() {
         loop
         preload="none"
       />
-      {!entered ? (
+      {!entered && stage !== "invitation" ? (
+        <main className={`celestial-intro stage-${stage}`} style={{"--celestial-art": `url(${import.meta.env.BASE_URL}images/celestial-background.webp)`}}>
+          <div className="reveal-title">
+            <img className="brand-emblem" src={`${import.meta.env.BASE_URL}images/mpst-logo.png`} alt="MPST" />
+            <h1>{settings.company}</h1>
+            <div className="christmas-word">Christmas</div>
+            <div className="stars-word">Under the Stars</div>
+          </div>
+        </main>
+      ) : !entered ? (
         <main className="christmas-opening">
           <div className="invitation-artwork">
             <video
@@ -312,61 +329,16 @@ function App() {
       </header>
 
       {page === "Home" && (
-        <>
-          <section className="hero">
-            <p className="eyebrow">
-              {settings.company}
-            </p>
-
-            <div className="hero-star">✦</div>
-
-            <h1 className="shining">
-              {settings.theme}
-            </h1>
-
-            <h2>{settings.title}</h2>
-
-            <p>{settings.invitation}</p>
-
-            <p>
-              December 07, 2026 |
-              5:00 PM to 10:00 PM
-            </p>
-
-            <button
-              className="primary-button"
-              onClick={() => navigate("RSVP")}
-            >
-              Confirm Your Attendance
-            </button>
-          </section>
-
-          <section className="content-section">
-            <h2>Countdown to Our Celebration</h2>
-
-            <Countdown
-              target={settings.eventDate}
-            />
-
-            <h2>Follow the Stars</h2>
-
-            <div className="star-grid">
-              {sections
-                .filter(s => s !== "Home")
-                .map(s => (
-                  <button
-                    className="star-card"
-                    key={s}
-                    onClick={() => navigate(s)}
-                  >
-                    <span>✦</span>
-                    <strong>{s}</strong>
-                    <small>Explore</small>
-                  </button>
-                ))}
-            </div>
-          </section>
-        </>
+        <section className="celestial-home" style={{"--celestial-art": `url(${import.meta.env.BASE_URL}images/celestial-background.webp)`}}>
+          <img className="brand-emblem" src={`${import.meta.env.BASE_URL}images/mpst-logo.png`} alt="MPST" />
+          <h1 className="company-title">{settings.company}</h1>
+          <div className="home-countdown"><p className="eyebrow">Countdown to our celebration</p><Countdown target={settings.eventDate} /></div>
+          <div className="christmas-word">Christmas</div>
+          <h2 className="stars-word">Under the Stars</h2>
+          <p className="event-details">December 07, 2026 · 5:00 PM to 10:00 PM<br />{settings.venue}</p>
+          <p className="rsvp-deadline">RSVP deadline: November 30, 2026</p>
+          <button type="button" className="primary-button home-rsvp" onClick={() => navigate("RSVP")}>✦ Confirm Your Attendance ✦</button>
+        </section>
       )}
 
       {page === "Dress Code" && (
