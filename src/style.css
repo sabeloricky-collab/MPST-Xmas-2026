@@ -347,74 +347,37 @@ footer {
 }
 
 
-/* Lightweight responsive opening: no glitter or flash animation */
+/* Responsive video invitation: no additional animation */
 .christmas-opening {
+  position: relative;
+  min-height: 100vh;
   min-height: 100svh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 12px;
   background: #030d20;
 }
 .invitation-artwork {
   position: relative;
-  width: min(100%, 1152px, calc((100svh - 65px) * 1152 / 648));
-  aspect-ratio: 1152 / 648;
+  width: min(100%, 177.61194vh);
+  width: min(100%, 177.61194svh);
+  aspect-ratio: 1904 / 1072;
+  flex: none;
 }
-.invitation-artwork picture,
-.invitation-image {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-.invitation-image { object-fit: contain; }
+.invitation-image { display: block; width: 100%; height: 100%; object-fit: contain; }
 .invitation-seal-button {
   position: absolute;
   z-index: 2;
-  left: 49.8%;
-  top: 66.5%;
-  width: 16%;
-  height: 26%;
+  left: 49.8%; top: 66.5%; width: 17%; height: 26%;
   transform: translate(-50%, -50%);
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  cursor: pointer;
-  touch-action: manipulation;
+  border: 0; background: transparent; border-radius: 50%;
+  cursor: pointer; touch-action: manipulation;
 }
-.invitation-seal-button:focus-visible {
-  outline: 3px solid #fff;
-  outline-offset: 3px;
-}
-.opening-hint {
-  margin: 8px 12px;
-  text-align: center;
-  color: #f0dca7;
-  font-size: .85rem;
-}
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
+.invitation-seal-button:focus-visible { outline: 3px solid white; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.opening-fallback { position: fixed; bottom: 12px; left: 0; right: 0; z-index: 3; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.opening-fallback .primary-button { margin: 0; padding: 10px 16px; }
 @media (max-width: 650px) {
-  .christmas-opening { padding: 0; }
-  .invitation-artwork {
-    width: min(100%, 643px, calc((100svh - 42px) * 643 / 969));
-    aspect-ratio: 643 / 969;
-  }
-  .invitation-seal-button {
-    left: 50%;
-    top: 60.5%;
-    width: 36%;
-    height: 18%;
-  }
-  .opening-hint { font-size: .75rem; }
+  .invitation-artwork { width: 100%; aspect-ratio: 1072 / 1616; }
+  .invitation-seal-button { left: 50%; top: 60.5%; width: 36%; height: 18%; }
 }
