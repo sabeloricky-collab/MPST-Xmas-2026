@@ -168,21 +168,26 @@ function App() {
   const [opening, setOpening] = useState(false);
   const musicRef = useRef(null);
 
-  function openInvitation() {
-    if (opening) return;
-    setOpening(true);
+function openInvitation() {
+  if (opening) return;
 
-    // Play synchronously inside the tap handler for mobile browsers.
-    const music = musicRef.current;
-    if (music) {
-      music.volume = 0.45;
-      music.play().catch(() => {
-        // Some devices may still prevent playback.
-      });
-    }
+  setOpening(true);
 
-    window.setTimeout(() => setEntered(true), 1100);
+  // Start Christmas music immediately on tap.
+  const music = musicRef.current;
+
+  if (music) {
+    music.volume = 0.45;
+    music.play().catch(error => {
+      console.log("Audio playback unavailable:", error);
+    });
   }
+
+  // Reveal the homepage after the flash animation.
+  setTimeout(() => {
+    setEntered(true);
+  }, 1600);
+}
 
   function navigate(destination) {
     setPage(destination);
@@ -243,9 +248,25 @@ function App() {
         preload="auto"
       />
 
-      {!entered ? (
-        <main className={`christmas-opening ${opening ? "is-opening" : ""}`}>
-          <div className="invitation-artwork">
+
+{!entered ? (
+  <main className={`christmas-opening ${opening ? "is-opening" : ""}`}>
+
+    <div className="invitation-artwork">
+      {/* Your existing invitation image and star seal button go here */}
+    </div>
+
+    <div className="christmas-flash" aria-hidden="true" />
+
+    <p className="opening-hint">
+      ✦ Tap the golden star to enter the celebration ✦
+    </p>
+
+  </main>
+) : (
+  // Your existing homepage JSX goes here
+)}
+
             
 <picture>
   <source
