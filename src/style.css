@@ -415,11 +415,55 @@ body { overflow-y:auto; }
 [data-layout="mobile"] .constellation-5 {left:79%;top:20%;width:21%;height:12%}
 [data-layout="mobile"] .art-rsvp {left:10%;top:72%;width:82%;height:10%;}
 .celestial-nav {justify-content:center; padding:6px;}
-.welcome-title {position:absolute; top:16%;left:30%;width:40%;text-align:center; color:#fff1cb; font:italic 700 2.6cqw Georgia,serif; text-shadow:0 2px 5px #000; opacity:0; pointer-events:none; transition:opacity .5s; z-index:3;}
-[data-layout="mobile"] .welcome-title {top:15%; font-size:4.5cqw;}
-.welcoming .welcome-title {opacity:1;}
-.welcoming .art-countdown,.welcoming .celestial-nav {visibility:hidden;}
-.welcoming .constellation,.welcoming .art-rsvp {pointer-events:none;}
 .flash-active::after {content:"";position:fixed;inset:0;background:#fff2ce;z-index:10;pointer-events:none;animation:singleIlluminate .55s ease-out forwards;}
 @keyframes singleIlluminate {from{opacity:0}to{opacity:1}}
-@media(prefers-reduced-motion:reduce){.flash-active::after{display:none}.welcome-title{transition:none}}
+@media(prefers-reduced-motion:reduce){.flash-active::after{display:none}}
+
+/* Full-width art, no distortion. Scroll naturally on short screens. */
+.celestial-home { justify-content:flex-start; }
+.celestial-art { width:100%; max-width:none; }
+.celestial-art[data-layout="mobile"] { width:100%; max-width:none; }
+.constellation { border-radius:0; overflow:visible; }
+.constellation span.constellation-motion { position:absolute; inset:0; width:100%; height:100%; opacity:1; padding:0; border-radius:0; transform:none; background:none; overflow:hidden; pointer-events:none; }
+.constellation-motion::before { content:""; position:absolute; inset:0; background-image:var(--sky-art); background-size:calc(10000% / var(--w)) calc(10000% / var(--h)); background-position:calc(var(--x) * 100% / (100 - var(--w))) calc(var(--y) * 100% / (100 - var(--h))); background-repeat:no-repeat; animation:constellationNudge 5s ease-in-out infinite; animation-delay:var(--delay,0s); }
+.constellation span.constellation-label { opacity:1; bottom:0; left:50%; transform:translate(-50%,55%); background:#071329e8; border:1px solid #c9d7f477; color:#edf3ff; font:700 clamp(10px,1.25cqw,18px)/1.15 Georgia,serif; padding:3px 8px; z-index:3; pointer-events:none; text-shadow:0 1px 3px #000; }
+[data-layout="mobile"] .constellation span.constellation-label { font-size:clamp(9px,2.6cqw,14px); padding:2px 4px; }
+.constellation:hover,.constellation:focus-visible { outline:2px solid #ffe4a1; box-shadow:0 0 14px #f9d17a88; }
+@keyframes constellationNudge { 0%,72%,100% {transform:scale(1) rotate(0)} 77%,87% {transform:scale(1.045) rotate(-1deg)} 82%,92% {transform:scale(1.045) rotate(1deg)} }
+@media(prefers-reduced-motion:reduce){.constellation-motion::before{animation:none!important}}
+
+.constellation-0 { --delay:0.00s; }
+.constellation-0 .constellation-motion::before { background-size:250.00000% 500.00000%; background-position:3.33333% 1.25000%; }
+
+.constellation-1 { --delay:0.43s; }
+.constellation-1 .constellation-motion::before { background-size:833.33333% 526.31579%; background-position:92.04545% 2.46914%; }
+
+.constellation-2 { --delay:0.86s; }
+.constellation-2 .constellation-motion::before { background-size:769.23077% 588.23529%; background-position:14.94253% 26.50602%; }
+
+.constellation-3 { --delay:1.29s; }
+.constellation-3 .constellation-motion::before { background-size:909.09091% 833.33333%; background-position:5.61798% 43.18182%; }
+
+.constellation-4 { --delay:1.72s; }
+.constellation-4 .constellation-motion::before { background-size:1000.00000% 833.33333%; background-position:15.55556% 52.27273%; }
+
+.constellation-5 { --delay:2.15s; }
+.constellation-5 .constellation-motion::before { background-size:714.28571% 588.23529%; background-position:98.83721% 25.30120%; }
+
+[data-layout="mobile"] .constellation-0 { --delay:0.00s; }
+[data-layout="mobile"] .constellation-0 .constellation-motion::before { background-size:204.08163% 714.28571%; background-position:1.96078% 0.00000%; }
+
+[data-layout="mobile"] .constellation-1 { --delay:0.43s; }
+[data-layout="mobile"] .constellation-1 .constellation-motion::before { background-size:476.19048% 666.66667%; background-position:98.73418% 1.17647%; }
+
+[data-layout="mobile"] .constellation-2 { --delay:0.86s; }
+[data-layout="mobile"] .constellation-2 .constellation-motion::before { background-size:555.55556% 909.09091%; background-position:0.00000% 24.71910%; }
+
+[data-layout="mobile"] .constellation-3 { --delay:1.29s; }
+[data-layout="mobile"] .constellation-3 .constellation-motion::before { background-size:588.23529% 1250.00000%; background-position:0.00000% 44.56522%; }
+
+[data-layout="mobile"] .constellation-4 { --delay:1.72s; }
+[data-layout="mobile"] .constellation-4 .constellation-motion::before { background-size:666.66667% 1250.00000%; background-position:0.00000% 60.86957%; }
+
+[data-layout="mobile"] .constellation-5 { --delay:2.15s; }
+[data-layout="mobile"] .constellation-5 .constellation-motion::before { background-size:476.19048% 833.33333%; background-position:100.00000% 22.72727%; }
