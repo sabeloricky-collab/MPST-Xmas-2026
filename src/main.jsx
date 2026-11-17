@@ -6,6 +6,9 @@ import "./style.css";
 const RSVP_WEB_APP_URL =
   "https://script.google.com/macros/s/AKfycbwuJ3pOhXdjL3imwLl2sL9bvQEtz_nBvzMw4QFryKbEV06WiOe7843Yi535NqnO9b77/exec";
 
+// Set only to the restricted Admin Apps Script deployment URL, never the employee RSVP URL.
+const ADMIN_WEB_APP_URL = "";
+
 const initialSettings = {
   company: "Maruichi Philippines Steel Tube Inc.",
   title: "Christmas Party 2026",
@@ -27,7 +30,7 @@ const sections = [
   "Venue",
   "Raffle",
   "Program",
-  "RSVP"
+  "Admin Portal"
 ];
 
 function Countdown({ target }) {
@@ -164,7 +167,7 @@ function RSVP({ settings }) {
 function DressCode({ mobile, navigate }) {
   const [color, setColor] = useState("navy");
   const base = import.meta.env.BASE_URL + "images/";
-  const links = [["Home","home"],["Venue","venue"],["Raffle","raffle"],["Program","program"],["Dress Code","dress"],["RSVP","rsvp"]];
+  const links = [["Home","home"],["Venue","venue"],["Raffle","raffle"],["Program","program"],["Dress Code","dress"],["Admin Portal","rsvp"]];
   return (
     <main className="dress-page" style={{"--dress-background": `url("${base}winter-${mobile ? "mobile" : "desktop"}.webp")`}}>
       <header className="dress-heading">
@@ -208,7 +211,7 @@ function DressCode({ mobile, navigate }) {
 
 function App() {
   const [settings] = useState(initialSettings);
-  const [entered, setEntered] = useState(false);
+  const [entered, setEntered] = useState(() => new URLSearchParams(window.location.search).get("return") === "rsvp");
   const [stage, setStage] = useState("invitation");
   const timers = useRef([]);
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
@@ -234,6 +237,11 @@ function App() {
     video.play().catch(() => setVideoBlocked(true));
   }, [mobile, entered]);
 
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("return") === "rsvp") { url.searchParams.delete("return"); window.history.replaceState(null, "", url); }
+  }, []);
+
   function openInvitation() {
     const music = musicRef.current;
     if (music) {
@@ -246,6 +254,7 @@ function App() {
   }
 
   function navigate(destination) {
+    if (musicRef.current?.paused) { musicRef.current.volume = 0.45; musicRef.current.play().catch(() => {}); }
     setStage("home");
     setPage(destination);
     window.scrollTo({
@@ -351,7 +360,7 @@ function App() {
             <div className="festival-details"><span>▣ DECEMBER 07, 2026 · 5–10 PM</span><span>◆ JET HOTEL, LIPA CITY</span></div>
             <button className="festival-rsvp" onClick={() => navigate("RSVP")}>❄ <span>Please Confirm Your Attendance</span> ✦</button>
             <nav className="festival-navigation" aria-label="Constellation navigation">
-              {[["Home","home","Santa's Sleigh"],["Venue","venue","Reindeer"],["Raffle","raffle","Christmas Gift"],["Program","program","Christmas Bell"],["Dress Code","dress","Christmas Tree"],["RSVP","rsvp","Christmas Angel"]].map(([destination, icon, label],i) => (
+              {[["Home","home","Santa's Sleigh"],["Venue","venue","Reindeer"],["Raffle","raffle","Christmas Gift"],["Program","program","Christmas Bell"],["Dress Code","dress","Christmas Tree"],["Admin Portal","rsvp","Christmas Angel"]].map(([destination, icon, label],i) => (
                 <button key={destination} className="festival-star" style={{"--delay": `${i * .55}s`}} onClick={() => navigate(destination)} aria-label={`${label}: ${destination}`}>
                   <img src={`${import.meta.env.BASE_URL}images/${icon}-star.webp`} alt="" />
                   <span>{destination}</span>
@@ -362,75 +371,21 @@ function App() {
           <div className="factory-space" aria-hidden="true" />
         </main>
       ) : page === "Dress Code" ? null : (
-        <header className="site-header"><button className="logo" onClick={() => navigate("Home")}>✦ MPST 2026</button><nav aria-label="Main navigation">{sections.map(section => <button key={section} className={page === section ? "active" : ""} onClick={() => navigate(section)}>{section}</button>)}</nav></header>
+        null
       )}
 
       {page === "Dress Code" && <DressCode mobile={mobile} navigate={navigate} />}
 
-      {page === "Venue" && (
-        <section className="content-section">
-          <p className="eyebrow">
-            THE CELEBRATION VENUE
-          </p>
-
-          <h1>{settings.venue}</h1>
-
-          <p>
-            December 07, 2026 |
-            5:00 PM to 10:00 PM
-          </p>
-
-          <div className="feature-card">
-            <h2>Join Us in Lipa City</h2>
-
-            <p>
-              Celebrate with the entire MPST family.
-            </p>
-
-            <a
-              className="primary-button"
-              href="https://www.google.com/maps/search/?api=1&query=Jet+Hotel+Lipa+City"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Open Google Maps
-            </a>
-          </div>
-        </section>
+      {page !== "Home" && page !== "Dress Code" && (
+        <main className="dress-page shared-celestial" style={{"--dress-background": `url("${import.meta.env.BASE_URL}images/winter-${mobile ? "mobile" : "desktop"}.webp")`}}>
+          <header className="dress-heading"><p className="dress-company">{settings.company}</p><p className="dress-theme">Christmas Under the Stars</p><h1>{page === "RSVP" ? "Attendance" : page}</h1></header>
+          {page === "RSVP" ? <RSVP settings={settings} /> : page === "Admin Portal" ? (
+            <section className="celestial-panel"><h2>Authorized personnel only</h2><p>Access the protected RSVP administration dashboard.</p>{ADMIN_WEB_APP_URL ? <a className="primary-button" href={ADMIN_WEB_APP_URL} target="_blank" rel="noopener noreferrer">Sign in to Admin Portal</a> : <p>Admin access is being prepared.</p>}</section>
+          ) : <section className="celestial-panel"><h2>{page === "Venue" ? settings.venue : page === "Raffle" ? "Christmas Raffle" : "Program and Awards"}</h2><p>Official details will be announced soon.</p></section>}
+          <nav className="festival-navigation dress-navigation" aria-label="Constellation navigation">{[["Home","home"],["Venue","venue"],["Raffle","raffle"],["Program","program"],["Dress Code","dress"],["Admin Portal","rsvp"]].map(([destination,icon],i)=><button type="button" key={destination} aria-current={page===destination ? "page" : undefined} className="festival-star" style={{"--delay":`${i*.55}s`}} onClick={()=>navigate(destination)}><img src={`${import.meta.env.BASE_URL}images/${icon}-star.webp`} alt=""/><span>{destination}</span></button>)}</nav>
+          <footer>✦ {settings.company} | Christmas Party 2026 ✦</footer>
+        </main>
       )}
-
-      {page === "Raffle" && (
-        <section className="content-section">
-          <p className="eyebrow">
-            EXCITING CHRISTMAS SURPRISES
-          </p>
-
-          <h1>Christmas Raffle</h1>
-
-          <Slideshow items={raffle} />
-        </section>
-      )}
-
-      {page === "Program" && (
-        <section className="content-section">
-          <p className="eyebrow">
-            CELEBRATING OUR PEOPLE
-          </p>
-
-          <h1>Program and Awards</h1>
-
-          <Slideshow items={awards} />
-        </section>
-      )}
-
-      {page === "RSVP" && (
-        <RSVP settings={settings} />
-      )}
-
-      {page !== "Home" && page !== "Dress Code" && <footer>
-        ✦ {settings.company} |
-        Christmas Party 2026 ✦
-      </footer>}
         </div>
       )}
     </>
