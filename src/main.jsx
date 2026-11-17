@@ -165,29 +165,16 @@ function App() {
   const [settings] = useState(initialSettings);
   const [entered, setEntered] = useState(false);
   const [page, setPage] = useState("Home");
-  const [opening, setOpening] = useState(false);
   const musicRef = useRef(null);
 
-function openInvitation() {
-  if (opening) return;
-
-  setOpening(true);
-
-  // Start Christmas music immediately on tap.
-  const music = musicRef.current;
-
-  if (music) {
-    music.volume = 0.45;
-    music.play().catch(error => {
-      console.log("Audio playback unavailable:", error);
-    });
-  }
-
-  // Reveal the homepage after the flash animation.
-  setTimeout(() => {
+  function openInvitation() {
+    const music = musicRef.current;
+    if (music) {
+      music.volume = 0.45;
+      music.play().catch(() => {});
+    }
     setEntered(true);
-  }, 1600);
-}
+  }
 
   function navigate(destination) {
     setPage(destination);
@@ -245,48 +232,34 @@ function openInvitation() {
         ref={musicRef}
         src={`${import.meta.env.BASE_URL}music/christmas.mp3`}
         loop
-        preload="auto"
+        preload="none"
       />
-{!entered ? (
-  <main
-    className={`christmas-opening ${opening ? "is-opening" : ""}`}
-  >
-    <div className="invitation-artwork">
-      <picture>
-        <source
-          media="(max-width: 650px)"
-          srcSet={`${import.meta.env.BASE_URL}images/christmas-invitation-mobile.png`}
-        />
-        <img
-          src={`${import.meta.env.BASE_URL}images/christmas-invitation.png`}
-          alt="MPST Christmas Party 2026 invitation"
-          className="invitation-image"
-        />
-      </picture>
-
-      <button
-        type="button"
-        className="invitation-seal-button"
-        onClick={openInvitation}
-        disabled={opening}
-        aria-label="Open Christmas invitation"
-      >
-        <span className="sr-only">
-          Enter the Celebration
-        </span>
-      </button>
-    </div>
-
-    <div
-      className="christmas-flash"
-      aria-hidden="true"
-    />
-
-    <p className="opening-hint">
-      ✦ Tap the golden star to enter the celebration ✦
-    </p>
-  </main>
-) : (
+      {!entered ? (
+        <main className="christmas-opening">
+          <div className="invitation-artwork">
+            <picture>
+              <source
+                media="(max-width: 650px)"
+                srcSet={`${import.meta.env.BASE_URL}images/christmas-invitation-mobile.gif`}
+              />
+              <img
+                src={`${import.meta.env.BASE_URL}images/christmas-invitation.gif`}
+                alt="MPST Christmas Party 2026 invitation"
+                className="invitation-image"
+              />
+            </picture>
+            <button
+              type="button"
+              className="invitation-seal-button"
+              onClick={openInvitation}
+              aria-label="Enter the Christmas celebration"
+            >
+              <span className="sr-only">Enter the Celebration</span>
+            </button>
+          </div>
+          <p className="opening-hint">✦ Tap the golden star to enter the celebration ✦</p>
+        </main>
+      ) : (
         <div className="website">
       <header className="site-header">
         <button
