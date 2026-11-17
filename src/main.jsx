@@ -246,11 +246,18 @@ function App() {
       {!entered ? (
         <main className={`christmas-opening ${opening ? "is-opening" : ""}`}>
           <div className="invitation-artwork">
-            <img
-              src={`${import.meta.env.BASE_URL}images/christmas-invitation.png`}
-              alt="Christmas invitation with Santa's sleigh constellation and golden star seal"
-              className="invitation-image"
-            />
+            
+<picture>
+  <source
+    media="(max-width: 650px)"
+    srcSet={`${import.meta.env.BASE_URL}images/christmas-invitation-mobile.png`}
+  />
+  <img
+    src={`${import.meta.env.BASE_URL}images/christmas-invitation.png`}
+    alt="MPST Christmas 2026 invitation featuring Santa's constellation and a golden star seal"
+    className="invitation-image"
+  />
+</picture>
             <button
               type="button"
               className="invitation-seal-button"
