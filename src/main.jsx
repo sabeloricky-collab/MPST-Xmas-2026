@@ -161,6 +161,51 @@ function RSVP({ settings }) {
   );
 }
 
+function DressCode({ mobile, navigate }) {
+  const [color, setColor] = useState("navy");
+  const base = import.meta.env.BASE_URL + "images/";
+  const links = [["Home","home"],["Venue","venue"],["Raffle","raffle"],["Program","program"],["Dress Code","dress"],["RSVP","rsvp"]];
+  return (
+    <main className="dress-page" style={{"--dress-background": `url("${base}winter-${mobile ? "mobile" : "desktop"}.webp")`}}>
+      <header className="dress-heading">
+        <p className="dress-company">Maruichi Philippines Steel Tube Inc.</p>
+        <p className="dress-theme">Christmas Under the Stars</p>
+        <h1>Dress Code</h1>
+        <p className="dress-tagline">Dress to shine under the stars</p>
+      </header>
+      <div className="dress-choice" role="group" aria-label="Choose your attire color">
+        <p>Choose your attire color</p>
+        <div className="dress-options">
+          {[["navy","Dark Navy Blue"],["silver","Silver"]].map(([value,label]) => (
+            <button key={value} type="button" aria-pressed={color === value} onClick={() => setColor(value)} className={`dress-option ${color === value ? "selected" : ""}`}>
+              <span className={`dress-swatch ${value}`} aria-hidden="true" />{label}<span className="dress-check" aria-hidden="true">{color === value ? "✓" : ""}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="dress-display" aria-live="polite">
+        <span className="sr-only">{color === "navy" ? "Dark navy blue" : "Silver"} collection</span>
+        <div className="dress-gallery">
+          {[["women","For Women","Long Gown"],["men","For Men","Formal Wear"]].map(([group,title,subtitle]) => (
+            <article className="dress-panel" key={group}>
+              <h2>✦ {title} ✦</h2><p>{subtitle}</p>
+              <img key={`${color}-${group}`} src={`${base}dress-${color}-${group}.webp`} alt={`Five ${color === "navy" ? "dark navy blue" : "silver"} ${subtitle.toLowerCase()} recommendations`} />
+            </article>
+          ))}
+        </div>
+      </div>
+      <div className={`dress-message ${color}`} aria-live="polite" aria-atomic="true">
+        <span aria-hidden="true">{color === "navy" ? "☾" : "✦"}</span>
+        <p>{color === "navy" ? "You want to dress like the night." : "You want to dress like the stars."}</p>
+        <small>{color === "navy" ? "Timeless. Mysterious. Elegant." : "Radiant. Brilliant. Enchanting."}</small>
+      </div>
+      <nav className="festival-navigation dress-navigation" aria-label="Constellation navigation">
+        {links.map(([destination,icon],i) => <button type="button" key={destination} aria-current={destination === "Dress Code" ? "page" : undefined} className="festival-star" style={{"--delay": `${i*.55}s`}} onClick={() => navigate(destination)}><img src={`${base}${icon}-star.webp`} alt=""/><span>{destination}</span></button>)}
+      </nav>
+    </main>
+  );
+}
+
 function App() {
   const [settings] = useState(initialSettings);
   const [entered, setEntered] = useState(false);
@@ -316,57 +361,11 @@ function App() {
           </div>
           <div className="factory-space" aria-hidden="true" />
         </main>
-      ) : (
+      ) : page === "Dress Code" ? null : (
         <header className="site-header"><button className="logo" onClick={() => navigate("Home")}>✦ MPST 2026</button><nav aria-label="Main navigation">{sections.map(section => <button key={section} className={page === section ? "active" : ""} onClick={() => navigate(section)}>{section}</button>)}</nav></header>
       )}
 
-      {page === "Dress Code" && (
-        <section className="content-section">
-          <p className="eyebrow">
-            AN EVENING OF ELEGANCE
-          </p>
-
-          <h1>Dress to Shine</h1>
-
-          <p>
-            Official Colors: Navy Blue and Silver
-          </p>
-
-          <div className="dress-grid">
-            <article className="feature-card">
-              <div className="feature-icon">
-                ♟
-              </div>
-
-              <h2>Gentlemen</h2>
-              <p>Formal Wear</p>
-              <p>Navy Blue and Silver</p>
-            </article>
-
-            <article className="feature-card">
-              <div className="feature-icon">
-                ♛
-              </div>
-
-              <h2>Ladies</h2>
-              <p>Long Gown</p>
-              <p>Navy Blue and Silver</p>
-            </article>
-          </div>
-
-          <div className="color-swatches">
-            <span
-              style={{ background: "#0B1B3A" }}
-            />
-            <span
-              style={{ background: "#AAB6C8" }}
-            />
-            <span
-              style={{ background: "#E4E9F0" }}
-            />
-          </div>
-        </section>
-      )}
+      {page === "Dress Code" && <DressCode mobile={mobile} navigate={navigate} />}
 
       {page === "Venue" && (
         <section className="content-section">
@@ -428,7 +427,7 @@ function App() {
         <RSVP settings={settings} />
       )}
 
-      {page !== "Home" && <footer>
+      {page !== "Home" && page !== "Dress Code" && <footer>
         ✦ {settings.company} |
         Christmas Party 2026 ✦
       </footer>}
