@@ -449,3 +449,10 @@ body { overflow-y:auto; }
 .dress-message p { margin:4px 0 8px; font:italic 700 clamp(22px,3.5vw,42px)/1.25 Georgia,serif; color:#c6dbff; }
 .dress-message.silver p { color:#f3f5ff; }
 .dress-message small { color:#ffdc94; font:italic clamp(13px,1.6vw,18px)/1.4 Georgia,serif; }
+
+/* Shared celestial pages */
+.shared-celestial {min-height:100svh; width:100%;}
+.celestial-panel {width:min(100%,780px); padding:clamp(22px,5vw,55px); background:#07152de8; border:1px solid #e9bd68; border-radius:20px; box-shadow:0 0 14px #f0ae463d; }
+.celestial-panel h2 {color:#ffdf9a;margin:0;}
+.shared-celestial .content-section {width:min(100%,780px); padding:12px; min-height:0; background:transparent;}
+.shared-celestial footer {background:transparent;}
