@@ -393,3 +393,43 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   .invitation-artwork { transition: none; }
 }
+
+/* RESPONSIVE CHRISTMAS INVITATION */
+
+@media (max-width: 650px) {
+  .christmas-opening {
+    min-height: 100svh;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .invitation-artwork {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    max-width: 520px;
+    box-shadow: none;
+  }
+
+  .invitation-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+  }
+
+  .invitation-seal-button {
+    left: 50%;
+    top: 60%;
+    width: 36%;
+    height: 18%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    touch-action: manipulation;
+  }
+
+  .opening-hint {
+    font-size: .75rem;
+    margin: 8px 12px;
+    letter-spacing: .3px;
+  }
+}
