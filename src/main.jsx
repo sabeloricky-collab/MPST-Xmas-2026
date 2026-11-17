@@ -296,16 +296,25 @@ function App() {
       ) : (
         <div className="website">
       {page === "Home" ? (
-        <main className="celestial-home">
-          <div className="celestial-art" data-layout={mobile ? "mobile" : "desktop"} style={{ "--sky-art": `url("${import.meta.env.BASE_URL}images/celestial-${mobile ? "mobile" : "desktop"}.webp")` }}>
-            <img className="celestial-image" src={`${import.meta.env.BASE_URL}images/celestial-${mobile ? "mobile" : "desktop"}.webp`} alt="Maruichi Philippines Steel Tube Inc. Christmas Under the Stars, December 7, 2026, Jet Hotel, Lipa City" />
-            <div className="art-countdown"><Countdown target={settings.eventDate} /></div>
-            {[["Home", "Santa's Sleigh"], ["Dress Code", "Christmas Tree"], ["Venue", "Reindeer"], ["Raffle", "Christmas Gift"], ["Program", "Christmas Bell"], ["RSVP", "Christmas Angel"]].map(([destination, label], i) => (
-              <button key={destination} className={`constellation constellation-${i}`} title={`${label}: ${destination}`} aria-label={`${label}: ${destination}`} onClick={() => navigate(destination)}><span className="constellation-motion" aria-hidden="true" /><span className="constellation-label">{destination}</span></button>
-            ))}
-            <button className="art-rsvp" onClick={() => navigate("RSVP")} aria-label="Please confirm your attendance" />
+        <main className="layered-home" style={{ "--winter-background": `url("${import.meta.env.BASE_URL}images/winter-${mobile ? "mobile" : "desktop"}.webp")` }}>
+          <div className="layered-content">
+            <picture className="festival-title">
+              <source media="(max-width: 650px)" srcSet={`${import.meta.env.BASE_URL}images/title-mobile.webp`} />
+              <img src={`${import.meta.env.BASE_URL}images/title-desktop.webp`} alt="Maruichi Philippines Steel Tube Inc. Christmas Under the Stars" />
+            </picture>
+            <div className="festival-countdown"><Countdown target={settings.eventDate} /></div>
+            <div className="festival-details"><span>▣ DECEMBER 07, 2026 · 5–10 PM</span><span>◆ JET HOTEL, LIPA CITY</span></div>
+            <button className="festival-rsvp" onClick={() => navigate("RSVP")}>❄ <span>Please Confirm Your Attendance</span> ✦</button>
+            <nav className="festival-navigation" aria-label="Constellation navigation">
+              {[["Home","home","Santa's Sleigh"],["Venue","venue","Reindeer"],["Raffle","raffle","Christmas Gift"],["Program","program","Christmas Bell"],["Dress Code","dress","Christmas Tree"],["RSVP","rsvp","Christmas Angel"]].map(([destination, icon, label],i) => (
+                <button key={destination} className="festival-star" style={{"--delay": `${i * .55}s`}} onClick={() => navigate(destination)} aria-label={`${label}: ${destination}`}>
+                  <img src={`${import.meta.env.BASE_URL}images/${icon}-star.webp`} alt="" />
+                  <span>{destination}</span>
+                </button>
+              ))}
+            </nav>
           </div>
-          <nav className="celestial-nav" aria-label="Page navigation">{sections.map(section => <button key={section} onClick={() => navigate(section)}>{section}</button>)}</nav>
+          <div className="factory-space" aria-hidden="true" />
         </main>
       ) : (
         <header className="site-header"><button className="logo" onClick={() => navigate("Home")}>✦ MPST 2026</button><nav aria-label="Main navigation">{sections.map(section => <button key={section} className={page === section ? "active" : ""} onClick={() => navigate(section)}>{section}</button>)}</nav></header>
