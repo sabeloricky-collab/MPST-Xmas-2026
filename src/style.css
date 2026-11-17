@@ -422,3 +422,30 @@ body { overflow-y:auto; }
  .factory-space {min-height:130px;}
 }
 @media(prefers-reduced-motion:reduce){.flash-active::after{display:none}.festival-star img{animation:none!important}}
+
+/* Interactive dress code gallery */
+.dress-page { min-height:100svh; padding:clamp(16px,3vw,34px) 20px 150px; display:flex; flex-direction:column; align-items:center; gap:14px; text-align:center; background:linear-gradient(#06132955,#06132996 60%,#06132915),var(--dress-background) center bottom / cover no-repeat; }
+.dress-heading p,.dress-heading h1 {margin:0;}
+.dress-company {font:700 clamp(20px,3vw,36px)/1.1 Georgia,serif;color:#e5ebf5;text-shadow:0 2px 3px #000;}
+.dress-theme {font:italic 700 clamp(18px,2.8vw,32px)/1.4 Georgia,serif;color:#ffdb81;}
+.dress-heading h1 {font:700 clamp(38px,6vw,72px)/1.1 Georgia,serif;text-transform:uppercase;letter-spacing:2px;background:linear-gradient(#fff,#b0b8c9 45%,#fff 55%,#a4adbe);background-clip:text;color:transparent;filter:drop-shadow(0 2px 2px #000);}
+.dress-tagline,.dress-choice>p {color:#ffdc94;text-transform:uppercase;letter-spacing:1.5px;font-size:clamp(11px,1.3vw,15px);font-weight:700;}
+.dress-choice {width:min(100%,720px);}.dress-choice>p {margin:0 0 9px;}
+.dress-options {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.dress-option {display:flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:7px 12px;border:1px solid #d7a64a;border-radius:40px;background:linear-gradient(#172b50,#07132a);color:#fff;font-weight:700;}
+.dress-option.selected {border:2px solid #ffe4a1;box-shadow:0 0 12px #ffbf4b;}.dress-option:focus-visible {outline:3px solid white;outline-offset:3px;}
+.dress-swatch {display:block;flex:none;width:34px;height:34px;border-radius:50%;border:1px solid #f8d687;}.dress-swatch.navy {background:linear-gradient(125deg,#020919,#142b58,#050e26);}.dress-swatch.silver {background:linear-gradient(125deg,#747c8b,#f8f8f8,#a1a9b7);}.dress-check {color:#ffd477;width:16px;flex:none;}
+.dress-display {width:min(100%,1320px);}.dress-gallery {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;}
+.dress-panel {min-width:0;overflow:hidden;border:2px solid #e9bd68;border-radius:20px;background:#07152de8;box-shadow:0 0 12px #f0ae463d;padding:10px;}.dress-panel h2 {font:700 clamp(20px,2.5vw,32px)/1.2 Georgia,serif;color:#ffdf9a;margin:0;}.dress-panel p {margin:2px 0 10px;color:#e6edf8;}
+.dress-panel img {display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:contain;background:#fafafa;border-radius:9px;animation:dressAppear .24s ease-out;}
+@keyframes dressAppear {from{opacity:.45;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.dress-note {color:#ffe2a8;font-style:italic;margin:0;text-shadow:0 2px 4px black;}.dress-navigation {margin:12px auto 0;}.dress-navigation [aria-current=page] span {color:#ffdd8b;box-shadow:0 0 12px #ffbc42;}
+@media(max-width:760px){.dress-page{padding:18px 12px 130px;background-size:auto 100%;}.dress-gallery{grid-template-columns:1fr;gap:16px;}.dress-option{font-size:12px;gap:5px;padding:7px 6px;}.dress-swatch{width:26px;height:26px;}.dress-navigation{grid-template-columns:repeat(3,minmax(0,1fr));}.dress-panel img{aspect-ratio:auto;}}
+@media(prefers-reduced-motion:reduce){.dress-panel img{animation:none;}}
+
+/* Dynamic attire message */
+.dress-message { width:min(100%,850px); padding:14px 12px; text-align:center; text-shadow:0 2px 5px #000; }
+.dress-message span { display:block; font-size:32px; color:#ffe1a0; }
+.dress-message p { margin:4px 0 8px; font:italic 700 clamp(22px,3.5vw,42px)/1.25 Georgia,serif; color:#c6dbff; }
+.dress-message.silver p { color:#f3f5ff; }
+.dress-message small { color:#ffdc94; font:italic clamp(13px,1.6vw,18px)/1.4 Georgia,serif; }
